@@ -20,6 +20,6 @@ Este documento descreve a arquitetura proposta para o projeto.
 ## Considerações de implantação
 - Containerização com Docker (recomendada).
 - CI/CD com GitHub Actions (arquivo em `.github/workflows/ci-cd.yml`).
-- Deployment em Heroku / DigitalOcean / AWS conforme necessidade.
+- Deployment baseada em imagens Docker: build da imagem, push para registro (Docker Hub/GHCR) e pull/execução nos ambientes de destino (VM, serviço de containers, orquestrador).
 
 > Esta é uma visão inicial — expanda com diagramas, fluxos e decisões arquiteturais específicas.
