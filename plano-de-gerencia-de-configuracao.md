@@ -19,16 +19,36 @@
 ## Índice
 
 1. [Introdução](#1-introdução)
-  1. Objetivo (#1.1-objetivo)
-  2. Escopo (#1.2-escopo)
-  3. Definições, Acrônimos e Abreviações
-  4. Referências
-  5. Visão Geral
-2. Gerenciamento de Configuração de Software
-3. O Programa de Gerenciamento de Configuração
-4. Marcos
-5. Treinamento e Recursos
-6. Controle de Software do Subfornecedor e do Fornecedor
+   1. [Objetivo](#11-objetivo)
+   2. [Escopo](#12-escopo)
+   3. [Definições,-Acrônimos-e-Abreviações](#13-definições-acrônimos-e-abreviações)
+   4. [Referências](#14-referências)
+   5. [Visão Geral](#15-visão-geral)
+2. [Gerenciamento de Configuração de Software](#2-gerenciamento-de-configuração-de-software)
+   1. [Organização,-Responsabilidades-e-Interfaces](#21-organização-responsabilidades-e-interfaces)
+   2. [Ferramentas,-Ambiente-e-Infra-estrutura](#22-ferramentas-ambiente-e-infra-estrutura)
+3. [O Programa de Gerenciamento de Configuração](#3-o-programa-de-gerenciamento-de-configuração)
+   1. [Identificação da Configuração](#31-identificação-da-configuração)
+      1. [Métodos de Identificação](#311-métodos-de-identificação)
+      2. [Linhas de Base do Projeto](#312-linhas-de-base-do-projeto)
+   2. [Configuração e Controle de Alterações](#32-configuração-e-controle-de-alterações)
+      1. [Processamento e Aprovação de Controles de Mudanças](#321-processamento-e-aprovação-de-controles-de-mudanças)  
+      2. [CCB (Conselho de Controle de Mudanças)](#322-ccb-conselho-de-controle-de-mudanças)
+   3. [Contabilidade do Status de Configuração](#33-contabilidade-do-status-de-configuração)
+      1. [Armazenamento de Mídia do Projeto e Processo de Release](#331-armazenamento-de-mídia-do-projeto-e-processo-de-release)  
+      2. [Relatórios e Auditorias](#332-relatórios-e-auditorias)
+4. [Marcos](#4-marcos)
+5. [Treinamento e Recursos](#5-treinamento-e-recursos)
+   1. [Treinamento Requerido](#51-treinamento-requerido)
+   2. [Recursos de Software](#52-recursos-de-software)
+   3. [Recursos Humanos](#53-recursos-humanos)
+6. [Controle de Software do Subfornecedor e do Fornecedor](#6-controle-de-software-do-subfornecedor-e-do-fornecedor)
+   1. [Dependências de Terceiros](#61-dependências-de-terceiros)
+   2. [Processo de Incorporação](#62-processo-de-incorporação)
+   3. [Controle de Versão](#63-controle-de-versão)
+   4. [Serviços Externos (SaaS/PaaS)](#64-serviços-externos-saaspaas)
+   5. [Licenciamento](#65-licenciamento)
+   6. [Descontinuação](#66-descontinuação)
 
 ---
 
@@ -300,11 +320,11 @@ tests/
 
 | Marco | Data | Responsável | Critérios |
 |-------|------|-------------|-----------|
-| M1: Repositório Configurado | [Data] | DevOps | Repo criado, estrutura definida |
-| M2: Pipeline CI/CD Funcional | [Data] | DevOps | GitHub Actions configurado, testes executando |
-| M3: Baseline Inicial (v1.0.0) | [Data] | Gerente GC | Código completo, testes ≥70%, deploy produção |
-| M4: Apresentação do Projeto | [Data] | Equipe | Slides, demonstração, lições aprendidas |
-| M5: Entrega Final | [Data] | Gerente GC | PGC (PDF), repositório (.zip), slides |
+| M1: Repositório Configurado | [Data X] | DevOps | Repo criado, estrutura definida |
+| M2: Pipeline CI/CD Funcional | [Data Y] | DevOps | GitHub Actions configurado, testes executando |
+| M3: Baseline Inicial (v1.0.0) | [Data Z] | Gerente GC | Código completo, testes ≥70%, deploy produção |
+| M4: Apresentação do Projeto | [Data XY] | Equipe | Slides, demonstração, lições aprendidas |
+| M5: Entrega Final | [Data XZ] | Gerente GC | PGC (PDF), repositório (.zip), slides |
 
 **Atualizações do PGC:**
 - Revisão trimestral
@@ -429,20 +449,9 @@ Este projeto utiliza bibliotecas open source gerenciadas via npm:
 **Processo:**
 1. Identificar código afetado
 2. Implementar alternativa
-3. Desinstalar: `npm uninstall [pacote]`
+3. Desinstalar: `npm uninstall [nome do pacote]`
 4. Executar testes completos
 5. Atualizar documentação
 
 ---
 
-## APROVAÇÃO
-
-| Nome | Papel | Assinatura | Data |
-|------|-------|------------|------|
-| [Nome] | Gerente de Configuração | __________ | ___/___/___ |
-| [Nome] | Líder Técnico | __________ | ___/___/___ |
-| [Nome] | DevOps Engineer | __________ | ___/___/___ |
-
----
-
-**FIM DO DOCUMENTO**
