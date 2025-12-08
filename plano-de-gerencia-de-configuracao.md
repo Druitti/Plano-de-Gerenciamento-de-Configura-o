@@ -19,16 +19,36 @@
 ## Índice
 
 1. [Introdução](#1-introdução)
-  1. Objetivo (#1.1-objetivo)
-  2. Escopo (#1.2-escopo)
-  3. Definições, Acrônimos e Abreviações
-  4. Referências
-  5. Visão Geral
-2. Gerenciamento de Configuração de Software
-3. O Programa de Gerenciamento de Configuração
-4. Marcos
-5. Treinamento e Recursos
-6. Controle de Software do Subfornecedor e do Fornecedor
+   1. [Objetivo](#11-objetivo)
+   2. [Escopo](#12-escopo)
+   3. [Definições,-Acrônimos-e-Abreviações](#13-definições-acrônimos-e-abreviações)
+   4. [Referências](#14-referências)
+   5. [Visão Geral](#15-visão-geral)
+2. [Gerenciamento de Configuração de Software](#2-gerenciamento-de-configuração-de-software)
+   1. [Organização,-Responsabilidades-e-Interfaces](#21-organização-responsabilidades-e-interfaces)
+   2. [Ferramentas,-Ambiente-e-Infra-estrutura](#22-ferramentas-ambiente-e-infra-estrutura)
+3. [O Programa de Gerenciamento de Configuração](#3-o-programa-de-gerenciamento-de-configuração)
+   1. [Identificação da Configuração](#31-identificação-da-configuração)
+      1. [Métodos de Identificação](#311-métodos-de-identificação)
+      2. [Linhas de Base do Projeto](#312-linhas-de-base-do-projeto)
+   2. [Configuração e Controle de Alterações](#32-configuração-e-controle-de-alterações)
+      1. [Processamento e Aprovação de Controles de Mudanças](#321-processamento-e-aprovação-de-controles-de-mudanças)  
+      2. [CCB (Conselho de Controle de Mudanças)](#322-ccb-conselho-de-controle-de-mudanças)
+   3. [Contabilidade do Status de Configuração](#33-contabilidade-do-status-de-configuração)
+      1. [Armazenamento de Mídia do Projeto e Processo de Release](#331-armazenamento-de-mídia-do-projeto-e-processo-de-release)  
+      2. [Relatórios e Auditorias](#332-relatórios-e-auditorias)
+4. [Marcos](#4-marcos)
+5. [Treinamento e Recursos](#5-treinamento-e-recursos)
+   1. [Treinamento Requerido](#51-treinamento-requerido)
+   2. [Recursos de Software](#52-recursos-de-software)
+   3. [Recursos Humanos](#53-recursos-humanos)
+6. [Controle de Software do Subfornecedor e do Fornecedor](#6-controle-de-software-do-subfornecedor-e-do-fornecedor)
+   1. [Dependências de Terceiros](#61-dependências-de-terceiros)
+   2. [Processo de Incorporação](#62-processo-de-incorporação)
+   3. [Controle de Versão](#63-controle-de-versão)
+   4. [Serviços Externos (SaaS/PaaS)](#64-serviços-externos-saaspaas)
+   5. [Licenciamento](#65-licenciamento)
+   6. [Descontinuação](#66-descontinuação)
 
 ---
 
@@ -48,7 +68,7 @@ Este plano aplica-se a:
 - Configurações de ambiente e dependências
 - Schemas de banco de dados
 
-Abrange desde o desenvolvimento local até a implantação em produção no Heroku.
+Abrange desde o desenvolvimento local até a implantação em produção em contêineres Docker.
 
 ## 1.3 Definições, Acrônimos e Abreviações
 
@@ -68,7 +88,7 @@ Abrange desde o desenvolvimento local até a implantação em produção no Hero
 
 1. **Git Documentation** - https://git-scm.com/doc
 2. **GitHub Actions Documentation** - https://docs.github.com/actions
-3. **Heroku Dev Center** - https://devcenter.heroku.com/
+3. **Docker Documentation** - https://docs.docker.com/
 4. **Semantic Versioning 2.0.0** - https://semver.org/
 5. **Jest Documentation** - https://jestjs.io/docs/getting-started
 
@@ -117,7 +137,7 @@ Este documento está organizado em 6 seções principais:
 
 **Controle de Versão:** Git + GitHub  
 **CI/CD:** GitHub Actions  
-**Deploy:** Heroku  
+**Deploy:** Docker (imagens/container) — build de imagem, push para registro e execução em host/container runtime
 **Gerenciamento de Dependências:** npm  
 **Testes:** Jest + Supertest + MongoDB Memory Server  
 **Linting:** ESLint  
@@ -135,10 +155,11 @@ Este documento está organizado em 6 seções principais:
 - Node.js 18.x, MongoDB Memory Server
 - Ambientes efêmeros
 
-#### Produção (Heroku)
-- Heroku Hobby Dyno
-- MongoDB Atlas
-- SSL automático
+#### Produção (Docker)
+- Imagem Docker gerada a partir do repositório (Dockerfile)
+- Registro de imagens: Docker Hub, GitHub Container Registry ou outro registro privado
+- Execução: container em servidor cloud (Droplet/VM), serviço de containers (ECS, DigitalOcean App Platform, etc.) ou plataforma de orquestração
+- SSL e balanceamento via proxy reverso ou plataforma de hospedagem (Let's Encrypt/Load Balancer)
 
 ### Estrutura de Branches
 
@@ -249,7 +270,6 @@ tests/
 4. Documentação da decisão
 5. Comunicação aos stakeholders
 
-## 3.3 Contabilidade do Status de Configuração
 
 ### 3.3.1 Armazenamento de Mídia do Projeto e Processo de Release
 
@@ -265,10 +285,11 @@ tests/
 - **Banco de Dados:** MongoDB Atlas (snapshots diários, retenção 7 dias)
 - **Configurações:** Documentadas em local seguro
 
+## 3.3 Contabilidade do Status de Configuração
 **Processo de Release:**
-1. Merge para main
+1. Merge para `main`
 2. Criação de tag (`v1.2.0`)
-3. Deploy automático via GitHub Actions
+3. Build de imagem Docker e deploy automático via GitHub Actions (build → push para registro de imagens → atualização do ambiente de produção)
 4. Publicação de release notes no GitHub
 5. Monitoramento pós-release (24-48h)
 
@@ -300,11 +321,11 @@ tests/
 
 | Marco | Data | Responsável | Critérios |
 |-------|------|-------------|-----------|
-| M1: Repositório Configurado | [Data] | DevOps | Repo criado, estrutura definida |
-| M2: Pipeline CI/CD Funcional | [Data] | DevOps | GitHub Actions configurado, testes executando |
-| M3: Baseline Inicial (v1.0.0) | [Data] | Gerente GC | Código completo, testes ≥70%, deploy produção |
-| M4: Apresentação do Projeto | [Data] | Equipe | Slides, demonstração, lições aprendidas |
-| M5: Entrega Final | [Data] | Gerente GC | PGC (PDF), repositório (.zip), slides |
+| M1: Repositório Configurado | [Data X] | DevOps | Repo criado, estrutura definida |
+| M2: Pipeline CI/CD Funcional | [Data Y] | DevOps | GitHub Actions configurado, testes executando |
+| M3: Baseline Inicial (v1.0.0) | [Data Z] | Gerente GC | Código completo, testes ≥70%, deploy produção |
+| M4: Apresentação do Projeto | [Data XY] | Equipe | Slides, demonstração, lições aprendidas |
+| M5: Entrega Final | [Data XZ] | Gerente GC | PGC (PDF), repositório (.zip), slides |
 
 **Atualizações do PGC:**
 - Revisão trimestral
@@ -329,18 +350,18 @@ tests/
 
 **Para DevOps:**
 - GitHub Actions (4h)
-- Heroku Deploy (3h)
+- Docker e deploy com containers (3h)
 - MongoDB Atlas (2h)
 
 ## 5.2 Recursos de Software
 
 **Ferramentas Necessárias:**
 - Git, Node.js 18.x, VS Code
-- Acesso: GitHub, Heroku, MongoDB Atlas
+- Acesso: GitHub, Docker (Docker Desktop / Docker Hub / registro de container), MongoDB Atlas
 
 **Licenças:**
 - GitHub: Gratuito (público) ou Pro (privado)
-- Heroku: Tier gratuito ou Hobby ($7/mês)
+- Docker / Docker Hub: Conta gratuita disponível; custos para recursos avançados ou registros privados conforme necessidade
 - MongoDB Atlas: Tier gratuito M0
 
 ## 5.3 Recursos Humanos
@@ -396,10 +417,11 @@ Este projeto utiliza bibliotecas open source gerenciadas via npm:
 
 ## 6.4 Serviços Externos (SaaS/PaaS)
 
-**Heroku (Deploy):**
-- SLA: 99.95% uptime
-- Deploy via Git push/GitHub Actions
-- Monitoramento via logs
+**Docker (Deploy / Imagens):**
+- Build de imagens a partir do `Dockerfile` no repositório
+- Registro de imagem: Docker Hub, GitHub Container Registry ou registro privado
+- Deploy: pull da imagem no host ou atualização via orquestrador/serviço
+- Monitoramento via logs do container e ferramentas de observabilidade
 
 **MongoDB Atlas (Banco de Dados):**
 - SLA: 99.95% uptime (M10+)
@@ -429,20 +451,9 @@ Este projeto utiliza bibliotecas open source gerenciadas via npm:
 **Processo:**
 1. Identificar código afetado
 2. Implementar alternativa
-3. Desinstalar: `npm uninstall [pacote]`
+3. Desinstalar: `npm uninstall [nome do pacote]`
 4. Executar testes completos
 5. Atualizar documentação
 
 ---
 
-## APROVAÇÃO
-
-| Nome | Papel | Assinatura | Data |
-|------|-------|------------|------|
-| [Nome] | Gerente de Configuração | __________ | ___/___/___ |
-| [Nome] | Líder Técnico | __________ | ___/___/___ |
-| [Nome] | DevOps Engineer | __________ | ___/___/___ |
-
----
-
-**FIM DO DOCUMENTO**
